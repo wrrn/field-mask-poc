@@ -1,0 +1,78 @@
+/**
+ * Config related messages.
+ *
+ * This file is really just an example. The data model is completely
+ * fictional.
+ */
+syntax = "proto3";
+
+package poc.config;
+
+option go_package = "config";
+
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/empty.proto";
+
+// Config represents a tagging of an IP and if it is enabled.
+message Config {
+  string name = 1;   // The name or id that will be used. It will be UUID assigned by the server
+  string config_name = 2; // The user defined name of the config.
+  bytes ip = 3; // The ip the of the config
+  repeated string tags = 4; // Tags associated with the config
+};
+
+
+// Get all of the configs in a List.
+// The fields in the field_mask will be the only ones that are returned.
+message ListConfigsRequest {
+  google.protobuf.FieldMask field_mask = 1; // The fields that we would like to see
+};
+
+// The list of configs that were requested
+message ListConfigsResponse {
+  repeated Config configs = 1;
+};
+
+// The new config that will be created
+message CreateConfigRequest {
+  Config config = 1;
+};
+
+// The created config. Everything will match the request except for the name.
+message CreateConfigResponse {
+  Config config = 1;
+};
+
+// Update a configuration. Only the fields in the field mask will be updated.
+// The name is used to identify the config that should updated.
+message UpdateConfigRequest {
+  Config config = 1; // The updated config.
+  google.protobuf.FieldMask update_mask = 2; // The fields to update.
+};
+
+// The updated configuration.
+message UpdateConfigResponse {
+  Config config = 1;
+}
+
+message DeleteConfigRequest {
+  string name = 1;
+}
+
+service ConfigService {
+  // List all of the config.
+  rpc ListConfigs  (ListConfigsRequest)  returns (ListConfigsResponse){};
+
+  // Create a new config.
+  rpc CreateConfig (CreateConfigRequest) returns (CreateConfigResponse){};
+
+  // Update a config.
+  rpc UpdateConfig (UpdateConfigRequest) returns (UpdateConfigResponse){};
+
+  // Delete a config.
+  rpc DeleteConfig(DeleteConfigRequest)  returns (google.protobuf.Empty){};
+};
+  
+
+
+

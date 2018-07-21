@@ -1,0 +1,15 @@
+type: google.api.Service
+config_version: 3
+
+http:
+  rules:
+    - selector: poc.config.ConfigService.ListConfigs
+      get: /v1/configs
+
+    - selector: poc.config.ConfigService.CreateConfig
+      post: /v1/configs
+      body: '*'
+
+    - selector: poc.config.ConfigService.UpdateConfig
+      patch: /v1/{config.name=configs/*}
+      body: '*'
